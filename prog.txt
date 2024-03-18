@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <locale.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+void shifr(char str[], char key[], int ch)
+{
+	int strLen = strlen(str);
+	int keyLen = strlen(key);
+	char newstr[1000];
+	int ind=0;
+	for (int i = 0; i < 1000; i++)
+		if (isalpha(str[i]))
+		{
+			newstr[i] = (str[i] - 'a' + key[ind % keyLen] - 'a') % 26 + 'a';
+			ind++;
+		}
+		else
+			newstr[i] = str[i];
+	newstr[strLen] = '\0';
+	if (ch == 0)
+		puts(newstr);
+	else
+	{
+		FILE* f;
+		fopen_s(&f, "itog.txt", "w");
+		fputs(newstr, f);
+		fclose(f);
+	}
+}
+void deshifr(char str[], char key[], int ch)
+{
+	int strLen = strlen(str);
+	int keyLen = strlen(key);
+	char newstr[1000];
+	int ind = 0;
+	for (int i = 0; i < 1000; i++)
+		if (isalpha(str[i]))
+		{
+			newstr[i] = (26 + str[i] - 'a' - key[ind % keyLen] + 'a') % 26 + 'a';
+			ind++;
+		}
+		else
+			newstr[i] = str[i];
+	newstr[strLen] = '\0';
+	if (ch == 0)
+		puts(newstr);
+	else
+	{
+		FILE* f;
+		fopen_s(&f, "itog.txt", "w");
+		fputs(newstr, f);
+		fclose(f);
+	}
+}
+int main() {
+	setlocale(LC_ALL, "ru");
+	int ch1, ch2, ch3;
+	char str[1000];
+	char key[100];
+	do {
+		printf("Выбор действия:\n0 - шифрование\n1 - дешифрование\n"); scanf_s("%d", &ch1);
+		if (ch1 < 0 || ch1 > 1)
+			printf("Ошибка ввода\n");
+		scanf_s("%*c");
+	} while (ch1 < 0 || ch1 > 1);
+	do {
+		printf("Выбор ввода информации:\n0 - с клавиатуры\n1 - из файла\n"); scanf_s("%d", &ch2);
+		if (ch2 < 0 || ch2 > 1)
+			printf("Ошибка ввода\n");
+		scanf_s("%*c");
+	} while (ch2 < 0 || ch2 > 1);
+	do {
+		printf("Выбор вывода информации:\n0 - на экран\n1 - в файл\n"); scanf_s("%d", &ch3);
+		if (ch3 < 0 || ch3 > 1)
+			printf("Ошибка ввода\n");
+		scanf_s("%*c");
+	} while (ch3 < 0 || ch3 > 1);
+	if (ch2 == 0)
+	{
+		printf("Введите текст "); gets_s(str);
+		printf("Введите ключ "); gets_s(key);
+	}
+	else {
+		FILE* f;
+		fopen_s(&f, "slova.txt", "r");
+		fgets(str, 1000, f);
+		fgets(key, 100, f);
+		fclose(f);
+	}
+	if (ch1 == 0)
+		shifr(str, key, ch3);
+	else
+		deshifr(str, key, ch3);
